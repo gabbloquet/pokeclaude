@@ -1,159 +1,125 @@
-# PokeClaude - Guide pour Claude Code
+# PokeClaude
 
-## Description du Projet
+Jeu Pokémon-like en TypeScript/Phaser 3 avec IA générative (OpenAI).
 
-PokeClaude est un jeu de type Pokémon développé en TypeScript avec Phaser 3. Le jeu inclut l'exploration d'un monde en pixel art, des combats tour par tour, la capture de créatures et un système de progression.
+## Stack
 
-## Stack Technique
+TypeScript 5.x • Phaser 3.80+ • Vite • Vitest • Zustand • OpenAI API
 
-- **Framework de jeu** : Phaser 3.80+
-- **Langage** : TypeScript 5.x
-- **Bundler** : Vite
-- **Tests** : Vitest
-- **State Management** : Zustand
+## Commands
 
-## Structure du Projet
+```bash
+npm run dev          # Dev server (http://localhost:5173)
+npm run build        # Production build
+npm run test         # Run tests
+npm run test:watch   # Tests en mode watch
+npm run preview      # Preview du build
+node scripts/generateSprites.cjs  # Générer sprites
+```
+
+## Structure
 
 ```
 src/
-├── config/          # Configuration Phaser et constantes UI
-├── data/            # Données statiques (créatures, attaques, items, maps)
-├── entities/        # Entités du jeu (Player)
-├── events/          # EventBus et définitions d'événements
-├── scenes/          # Scènes Phaser (Boot, Preload, World, Battle)
-├── systems/         # Logique métier (battle, capture, progression, save)
-├── store/           # State management avec Zustand
-├── types/           # Types TypeScript
-├── ui/              # Composants UI (dont ui/battle/)
-└── utils/           # Fonctions utilitaires
-
-public/assets/
-├── sprites/
-│   ├── player/      # Spritesheet du joueur (4 directions x 4 frames)
-│   ├── creatures/   # Sprites des créatures
-│   ├── tiles/       # Tiles de la map (grass, water, path, wall, tallGrass)
-│   └── ui/          # Éléments d'interface
-└── audio/           # Musiques et effets sonores (à venir)
+├── config/           # Config Phaser, constantes UI
+├── data/             # Données statiques (creatures, moves, items)
+│   ├── prompts/      # Templates prompts IA
+│   └── fallbacks/    # Fallbacks si IA indisponible
+├── entities/         # Player
+├── events/           # EventBus singleton
+├── scenes/           # Scènes Phaser (Boot, Preload, World, Battle)
+├── services/ai/      # OpenAI service + generators + validators
+├── systems/          # Logique métier (battle, capture, dialogue)
+│   └── battle/agents/  # RandomAgent, HeuristicAgent, LLMAgent
+├── store/            # Zustand stores
+├── types/            # TypeScript interfaces
+├── ui/               # Composants UI
+└── utils/            # Helpers
 ```
 
-## Commandes Utiles
+## Code Style
 
-```bash
-npm run dev      # Lancer le serveur de développement
-npm run build    # Build de production
-npm run test     # Lancer les tests
-npm run preview  # Prévisualiser le build
-```
+- **Modules** : ES modules, named exports
+- **Naming** : PascalCase (classes/types), camelCase (functions/vars)
+- **Files** : Une classe/système par fichier
+- **Types** : Interfaces dans `src/types/`, pas de `any`
+- **Events** : Toujours cleanup listeners dans `destroy()`
 
-## Conventions de Code
+## Architecture
 
-- **Scènes** : Une scène par fichier dans `src/scenes/`
-- **Systèmes** : Logique métier découplée dans `src/systems/`
-- **Types** : Interfaces TypeScript dans `src/types/`
-- **Données** : Données statiques (créatures, attaques) dans `src/data/`
-
-## Architecture Event-Driven
-
-Le projet utilise une architecture Event-Driven pour découpler les modules. Un **EventBus** singleton centralise la communication entre composants.
-
-### Fichiers clés
-
-```
-src/events/
-├── EventBus.ts        # Singleton EventEmitter global
-├── BattleEvents.ts    # Définition des événements de combat
-└── index.ts           # Exports publics
-```
-
-### Utilisation
+### EventBus (Event-Driven)
 
 ```typescript
 import { EventBus, BATTLE_EVENTS } from '../events';
 
-// Émettre un événement
-EventBus.emitBattle(BATTLE_EVENTS.MOVE_SELECTED, { moveId: 1 });
+// Émettre
+EventBus.emitBattle(BATTLE_EVENTS.DAMAGE_DEALT, { target: 'enemy', damage: 25 });
 
-// Écouter un événement
-EventBus.onBattle(BATTLE_EVENTS.HP_UPDATE, (payload) => {
-  console.log(payload.target, payload.currentHp);
-});
+// Écouter
+EventBus.onBattle(BATTLE_EVENTS.HP_UPDATE, (payload) => { /* ... */ });
 
-// Nettoyer les listeners (important dans destroy())
-EventBus.offBattle(BATTLE_EVENTS.HP_UPDATE, this.handleHpUpdate, this);
+// Cleanup (OBLIGATOIRE dans destroy())
+EventBus.offBattle(BATTLE_EVENTS.HP_UPDATE, this.handler, this);
 ```
 
-### Événements disponibles
+### IA Service
 
-| Catégorie | Événements |
-|-----------|------------|
-| Actions joueur | `ACTION_SELECTED`, `MOVE_SELECTED`, `BALL_SELECTED`, `ITEM_SELECTED`, `RUN_SELECTED` |
-| Combat | `TURN_START`, `TURN_END`, `DAMAGE_DEALT`, `CREATURE_FAINTED`, `BATTLE_END` |
-| Capture | `CAPTURE_START`, `CAPTURE_SHAKE`, `CAPTURE_SUCCESS`, `CAPTURE_FAIL` |
-| Progression | `EXP_GAINED`, `LEVEL_UP`, `MOVE_LEARNED`, `EVOLUTION_START` |
-| UI | `MESSAGE_SHOW`, `MESSAGE_COMPLETE`, `MENU_SHOW`, `HP_UPDATE` |
-| Audio | `SFX_PLAY`, `MUSIC_PLAY`, `MUSIC_STOP` |
+```typescript
+import { AIService } from '@/services/ai';
 
-### Bonnes pratiques
-
-- Toujours nettoyer les listeners dans `destroy()` ou `shutdown()`
-- Utiliser les types `BattleEventPayloads` pour le typage fort des payloads
-- Les composants UI supportent un mode `useEventBus: true` pour activer l'EventBus
-- Debug avec `EventBus.setDebug(true)` pour logger tous les événements
-
-## Génération des Sprites
-
-Les sprites sont générés programmatiquement via le script :
-```bash
-node scripts/generateSprites.cjs
+if (AIService.isAvailable()) {
+  const response = await AIService.chat(messages, { temperature: 0.7 });
+}
 ```
 
-Ce script crée tous les assets pixel art (tiles, joueur, créatures, UI).
+### Battle Agents
 
-## Fonctionnalités Implémentées
+```typescript
+import { createBattleAgent } from '@/systems/battle/agents';
+const agent = createBattleAgent('hard'); // 'easy' | 'normal' | 'hard' | 'expert'
+```
 
-- [x] Exploration du monde avec mouvement grille
-- [x] Système de collision
-- [x] Rencontres aléatoires dans les hautes herbes
-- [x] Combat tour par tour avec système de types
-- [x] Calcul de dégâts avec STAB et efficacités
-- [x] Interface de combat (menus, barres de vie)
-- [x] Sprites pixel art pour tiles, joueur et créatures
-- [x] Animation de marche du joueur
-- [x] Ombre dynamique sous le joueur
-- [x] Caméra avec suivi fluide
-- [x] Architecture Event-Driven avec EventBus
-- [x] UI de combat modulaire (InfoBox, BattleMenus, BattleUIManager)
+## Gotchas
 
-## Fonctionnalités À Implémenter
+- **EventBus leaks** : Toujours `off()` dans `destroy()` sinon memory leaks
+- **Phaser lifecycle** : Assets dans `preload()`, objets dans `create()`
+- **IA fallback** : Si `VITE_AI_ENABLED=false`, utilise `HeuristicAgent` + données statiques
+- **Sprites 32x32** : Tous les tiles/sprites font 32x32px
+- **Encounters** : 15% chance par pas dans tallGrass
 
-- [ ] Système de capture complet avec animation
-- [ ] Inventaire fonctionnel (objets, balls)
-- [ ] Système d'expérience et level up
-- [ ] Évolutions des créatures
-- [ ] Sauvegarde/Chargement
-- [ ] NPCs et dialogues
-- [ ] Plus de zones et maps
-- [ ] Audio (musiques et SFX)
+## Domain Terms
 
-## Créatures Disponibles
+| Terme | Signification |
+|-------|---------------|
+| **BST** | Base Stat Total (somme des stats) |
+| **STAB** | Same Type Attack Bonus (1.5x) |
+| **Type effectiveness** | 0.5x / 1x / 2x selon types |
+| **Creature** | Équivalent Pokémon |
+| **Move** | Attaque/capacité |
+| **EventBus** | Singleton pour communication inter-modules |
+
+## Creatures
 
 | ID | Nom | Type(s) | Évolution |
 |----|-----|---------|-----------|
-| 1 | Flamling | Feu | → Flamero (Nv.16) |
-| 2 | Flamero | Feu | → Flamaster (Nv.36) |
-| 3 | Flamaster | Feu/Vol | - |
-| 4 | Aqualing | Eau | → Aquaro (Nv.16) |
-| 5 | Aquaro | Eau | → Aquaster (Nv.36) |
-| 6 | Aquaster | Eau | - |
-| 7 | Leafling | Plante | → Leafero (Nv.16) |
-| 8 | Leafero | Plante/Poison | → Leafaster (Nv.32) |
-| 9 | Leafaster | Plante/Poison | - |
-| 10 | Sparkit | Électrik | → Sparkolt (Nv.26) |
-| 11 | Sparkolt | Électrik | - |
+| 1-3 | Flamling → Flamero → Flamaster | Feu (→ Feu/Vol) | Nv.16, 36 |
+| 4-6 | Aqualing → Aquaro → Aquaster | Eau | Nv.16, 36 |
+| 7-9 | Leafling → Leafero → Leafaster | Plante (→ Plante/Poison) | Nv.16, 32 |
+| 10-11 | Sparkit → Sparkolt | Électrik | Nv.26 |
 
-## Notes pour le Développement
+## Balance Guidelines
 
-- Les tiles font 32x32 pixels
-- Le joueur spawn au centre de la map de test
-- Les combats se déclenchent avec 15% de chance par pas dans les hautes herbes
-- Le système de types suit les efficacités classiques Pokémon
+| Stage | BST attendu |
+|-------|-------------|
+| Base | 280-320 |
+| Mid | 380-420 |
+| Final | 480-540 |
+
+## Env Variables
+
+```bash
+# .env.local (gitignored)
+VITE_OPENAI_API_KEY=sk-...
+VITE_AI_ENABLED=true
+VITE_AI_MODEL=gpt-4o-mini
+```
