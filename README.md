@@ -5,6 +5,7 @@ Un jeu de type Pokémon développé en TypeScript avec Phaser 3 et Claude Code.
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)
 ![Phaser](https://img.shields.io/badge/Phaser-8B89CC?style=flat&logo=phaser&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)
+![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=flat&logo=openai&logoColor=white)
 
 ## Objectifs
 
@@ -26,6 +27,7 @@ Ce projet a trois objectifs principaux :
 - **Combats tour par tour** : Affrontez des créatures sauvages avec un système de types
 - **Capture** : Attrapez des créatures pour agrandir votre équipe
 - **Progression** : Gagnez de l'expérience et faites évoluer vos créatures
+- **IA Avancée** : NPCs conversationnels et ennemis intelligents propulsés par GPT-5-mini
 
 ## Installation
 
@@ -42,6 +44,17 @@ npm run dev
 ```
 
 Le jeu sera accessible sur `http://localhost:3000` (ou le port suivant si occupé).
+
+## Configuration IA (Optionnel)
+
+Pour activer les fonctionnalités IA avancées (NPCs conversationnels, ennemis intelligents), créez un fichier `.env.local` :
+
+```bash
+VITE_OPENAI_API_KEY=sk-your-key-here
+VITE_AI_ENABLED=true
+```
+
+Sans clé API, le jeu fonctionne normalement avec des fallbacks (dialogues statiques, agents heuristiques).
 
 ## Contrôles
 
@@ -79,6 +92,7 @@ Le jeu inclut 11 créatures réparties en 4 lignées évolutives :
 - **[Vite](https://vitejs.dev/)** - Bundler ultra-rapide
 - **[Zustand](https://zustand-demo.pmnd.rs/)** - State management
 - **[Vitest](https://vitest.dev/)** - Tests unitaires
+- **[OpenAI API](https://openai.com/)** - IA pour NPCs et génération procédurale
 
 ## Structure du Projet
 
@@ -87,10 +101,12 @@ pokeclaude/
 ├── public/assets/       # Sprites et assets graphiques
 ├── src/
 │   ├── config/          # Configuration du jeu
-│   ├── data/            # Données (créatures, attaques, maps)
+│   ├── data/            # Données (créatures, attaques, maps, NPCs)
 │   ├── entities/        # Entités (Player)
 │   ├── scenes/          # Scènes Phaser
-│   ├── systems/         # Systèmes de jeu (combat, capture)
+│   ├── services/ai/     # Service IA (OpenAI, générateurs, validators)
+│   ├── systems/         # Systèmes de jeu (combat, capture, dialogue)
+│   │   └── battle/agents/  # Agents IA de combat
 │   ├── store/           # State management
 │   ├── types/           # Types TypeScript
 │   └── utils/           # Utilitaires
@@ -123,13 +139,16 @@ node scripts/generateSprites.cjs
 - [x] Combat tour par tour
 - [x] Système de types et dégâts
 - [x] Sprites pixel art
+- [x] **Intégration IA (OpenAI GPT-5-mini)**
+- [x] **Agents de combat intelligents** (Random, Heuristic, LLM)
+- [x] **Génération procédurale** (créatures, descriptions, quêtes)
+- [x] **NPCs conversationnels** avec personnalités
 - [ ] Système de capture complet
 - [ ] Inventaire et objets
 - [ ] Système d'XP et level up
 - [ ] Évolutions
 - [ ] Sauvegarde/Chargement
 - [ ] Plus de maps et zones
-- [ ] NPCs et dialogues
 - [ ] Musique et effets sonores
 
 ## Contribuer

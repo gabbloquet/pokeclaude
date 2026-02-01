@@ -121,5 +121,5 @@ const agent = createBattleAgent('hard'); // 'easy' | 'normal' | 'hard' | 'expert
 # .env.local (gitignored)
 VITE_OPENAI_API_KEY=sk-...
 VITE_AI_ENABLED=true
-VITE_AI_MODEL=gpt-4o-mini
+VITE_AI_MODEL=gpt-5-mini
 ```

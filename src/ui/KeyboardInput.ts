@@ -23,6 +23,7 @@ export class KeyboardInput {
   private keyboardListener?: (event: KeyboardEvent) => void;
   private cursorBlink?: Phaser.Time.TimerEvent;
   private showCursor: boolean = true;
+  private enabled: boolean = true;
 
   constructor(scene: Phaser.Scene, config: KeyboardInputConfig) {
     this.scene = scene;
@@ -90,6 +91,8 @@ export class KeyboardInput {
 
   private setupKeyboardListener(): void {
     this.keyboardListener = (event: KeyboardEvent) => {
+      if (!this.enabled) return;
+
       const key = event.key;
 
       if (key === 'Backspace') {
@@ -154,6 +157,7 @@ export class KeyboardInput {
 
   public setVisible(visible: boolean): void {
     this.container.setVisible(visible);
+    this.enabled = visible;
   }
 
   public destroy(): void {
