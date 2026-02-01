@@ -123,3 +123,15 @@ VITE_OPENAI_API_KEY=sk-...
 VITE_AI_ENABLED=true
 VITE_AI_MODEL=gpt-5-mini
 ```
+
+## Deep Dive Docs
+
+Pour plus de détails, charger à la demande :
+
+| Doc | Contenu |
+|-----|---------|
+| `docs/ARCHITECTURE.md` | EventBus, flux données, Phaser lifecycle |
+| `docs/AI_INTEGRATION.md` | Prompts, agents, fallbacks, tuning |
+| `docs/GAME_DESIGN.md` | Type chart, formules, balance, XP curves |
+| `docs/TESTING.md` | Vitest patterns, mocks Phaser, factories |
+| `docs/SPRITES.md` | Pixel art 32x32, palettes, animations |
