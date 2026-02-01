@@ -12,25 +12,21 @@
 npm run test              # Run all tests
 npm run test:watch        # Watch mode
 npm run test -- --coverage # Coverage report
-npm run test -- src/__tests__/battle.test.ts  # Single file
+npm run test -- src/tests/battleUtils.test.ts  # Single file
 ```
 
 ## Structure
 
 ```
-src/__tests__/
-├── battle/
-│   ├── damage.test.ts      # Calculs de dégâts
-│   ├── types.test.ts       # Efficacités types
-│   └── agents.test.ts      # Battle agents
-├── systems/
-│   ├── capture.test.ts     # Système capture
-│   └── progression.test.ts # XP, level up
-├── data/
-│   ├── creatures.test.ts   # Validation créatures
-│   └── moves.test.ts       # Validation moves
-└── utils/
-    └── helpers.test.ts     # Fonctions utilitaires
+src/tests/
+├── typeChart.test.ts           # Efficacités types
+├── battleUtils.test.ts         # Calculs de combat
+├── captureSystem.test.ts       # Système capture
+├── experienceSystem.test.ts    # XP, level up
+├── statusSystem.test.ts        # Status effects
+├── itemSystem.test.ts          # Items en combat
+├── overworldItemSystem.test.ts # Items overworld
+└── creatureUtils.test.ts       # Utilitaires créatures
 ```
 
 ## Patterns

@@ -122,17 +122,10 @@ useGameStore
 ├── flags: GameFlags
 └── actions: { ... }
 
-// Store combat (éphémère)
-useBattleStore
-├── playerCreature: BattleCreature
-├── enemyCreature: BattleCreature
-├── turn: number
-└── actions: { ... }
-
-// Store contenu généré
+// Store contenu généré (IA)
 useGeneratedContentStore
 ├── creatures: GeneratedCreature[]
-├── dialogues: CachedDialogue[]
+├── quests: GeneratedQuest[]
 └── actions: { ... }
 ```
 
