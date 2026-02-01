@@ -8,13 +8,17 @@ Un jeu de type Pokémon développé en TypeScript avec Phaser 3 et Claude Code.
 
 ## Objectifs
 
-Ce projet a deux objectifs principaux :
+Ce projet a trois objectifs principaux :
 
 1. **Démontrer la puissance de Claude Code** : Prouver qu'il est possible de créer un jeu vidéo complet sans aucune expérience préalable en développement de jeux, uniquement grâce à Claude Code et des prompts bien construits.
 
 2. **Monter en compétences sur les pratiques IA avancées** : Explorer les fonctionnalités avancées de Claude Code (Skills, Hooks, Sub-agents, Tasks, MCP) et développer une expertise sur les meilleures pratiques de l'ingénierie assistée par IA.
 
+3. **Se préparer à l'ère des agents IA** : Développer une posture d'**orchestrateur** plutôt que d'opérateur. Apprendre à déléguer des pans entiers de travail à l'IA, comprendre la structure "sous le capot" (données, architecture), et formuler des intentions claires. La valeur n'est plus dans "savoir où cliquer" mais dans la capacité à concevoir des systèmes et diriger les agents.
+
 > *"Le meilleur moyen d'apprendre, c'est de construire quelque chose."*
+>
+> *"Fuis les postes où tu es un simple utilisateur d'interface. Cherche à concevoir la logique et à diriger les machines."*
 
 ## Fonctionnalités
 
@@ -27,7 +31,7 @@ Ce projet a deux objectifs principaux :
 
 ```bash
 # Cloner le repository
-git clone https://github.com/votre-username/pokeclaude.git
+git clone git@github.com:gabbloquet/pokeclaude.git
 cd pokeclaude
 
 # Installer les dépendances
