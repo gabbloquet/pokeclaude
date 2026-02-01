@@ -5,12 +5,12 @@ Ce document liste les fonctionnalités avancées de Claude Code à explorer en u
 ## Niveau 1 - Fondamentaux
 
 ### CLAUDE.md
-- [ ] Améliorer le fichier CLAUDE.md avec des conventions de nommage strictes
-- [ ] Ajouter des règles de style de code spécifiques au projet
-- [ ] Documenter les patterns architecturaux à respecter
+- [x] Améliorer le fichier CLAUDE.md avec des conventions de nommage strictes
+- [x] Ajouter des règles de style de code spécifiques au projet
+- [x] Documenter les patterns architecturaux à respecter
 
 ### MCP Servers
-- [ ] Utiliser **exa** pour rechercher de la documentation Phaser/game dev
+- [x] Utiliser **exa** pour rechercher de la documentation Phaser/game dev
 - [ ] Utiliser **context7** pour accéder aux docs à jour (Zustand, Vite, Vitest)
 - [ ] Utiliser **GitHub MCP** pour automatiser la gestion des issues/PRs
 
