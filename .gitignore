@@ -32,3 +32,10 @@ coverage/
 # Temporary files
 *.tmp
 *.temp
+
+# Asset source packs (downloaded, not generated)
+public/assets/sprites/creatures/Retromon Free Pack/
+public/assets/sprites/creatures/Bonus Pack 2025/
+public/assets/sprites/player/Top down character template by RgsDev/
+public/assets/sprites/tiles/TilesetGrass/
+public/assets/sprites/tiles/FreeCuteTileset/

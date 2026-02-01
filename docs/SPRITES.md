@@ -2,99 +2,100 @@
 
 ## Specs
 
-| Propriété | Valeur |
-|-----------|--------|
-| Taille | 32x32 pixels |
-| Format | PNG (RGBA) |
-| Style | Pixel art |
-| Palette | 16 couleurs max par sprite |
+| Asset | Taille | Source |
+|-------|--------|--------|
+| Tiles | 32×32 | TilesetGrass (16×16 upscaled) |
+| Player | 32×32 | Top down character template (64×64 downscaled) |
+| Creatures | 64×64 | Retromon Free Pack (56×56 upscaled) |
+| Format | PNG (RGBA) | - |
+| Style | Pixel art GBC | - |
 
 ## Structure assets
 
 ```
 public/assets/sprites/
-├── creatures/       # Sprites créatures (front + back)
-│   ├── flamling.png
-│   └── flamling-back.png
-├── player/          # Spritesheet joueur
-│   └── player.png   # 4 directions × 4 frames
-├── tiles/           # Tiles de map
-│   ├── grass.png
-│   ├── water.png
-│   ├── path.png
-│   ├── wall.png
-│   └── tallGrass.png
-└── ui/              # Éléments interface
-    ├── button.png
-    └── healthbar.png
+├── creatures/                    # Sprites créatures (64×64)
+│   ├── flamling.png             # Feu base
+│   ├── flamero.png              # Feu mid
+│   ├── flamaster.png            # Feu final
+│   ├── aqualing.png             # Eau base
+│   ├── aquaro.png               # Eau mid
+│   ├── aquaster.png             # Eau final
+│   ├── leafling.png             # Plante base
+│   ├── leafero.png              # Plante mid
+│   ├── leafaster.png            # Plante final
+│   ├── sparkit.png              # Électrik base
+│   ├── sparkolt.png             # Électrik mid
+│   ├── Retromon Free Pack/      # Source (ne pas modifier)
+│   └── Bonus Pack 2025/         # Source (ne pas modifier)
+├── player/
+│   ├── player.png               # Spritesheet 128×128 (4×4 grid)
+│   └── Top down character.../   # Source (ne pas modifier)
+├── tiles/
+│   ├── grass.png                # Herbe (32×32)
+│   ├── tallGrass.png            # Hautes herbes
+│   ├── path.png                 # Chemin
+│   ├── water.png                # Eau
+│   ├── wall.png                 # Mur/falaise
+│   ├── TilesetGrass/            # Source CC-0
+│   └── FreeCuteTileset/         # Source (platformer)
+└── ui/
+    └── pokeball.png
 ```
 
-## Génération automatique
+## Scripts
 
-### Script
+### Extraire tiles du tileset
 
 ```bash
-node scripts/generateSprites.cjs
+node scripts/extractTiles.cjs
 ```
 
-### Ajouter une créature
+Extrait les tiles de `TilesetGrass/overworld_tileset_grass.png` en 32×32.
 
-```javascript
-// scripts/generateSprites.cjs
+### Créer spritesheet joueur
 
-function drawNewCreature(ctx) {
-  // Base shape
-  ctx.fillStyle = '#FF6B6B';
-  ctx.fillRect(8, 8, 16, 16);
-
-  // Eyes
-  ctx.fillStyle = '#FFFFFF';
-  ctx.fillRect(12, 12, 3, 3);
-  ctx.fillRect(17, 12, 3, 3);
-
-  // Pupils
-  ctx.fillStyle = '#000000';
-  ctx.fillRect(13, 13, 1, 1);
-  ctx.fillRect(18, 13, 1, 1);
-}
-
-// Register in CREATURES array
-const CREATURES = [
-  { name: 'flamling', draw: drawFlamling },
-  { name: 'newcreature', draw: drawNewCreature },  // Add here
-];
+```bash
+node scripts/createPlayerSpritesheet.cjs
 ```
 
-## Palette de couleurs
+Combine les frames individuels en spritesheet 4×4.
 
-### Types
+### Setup créatures
 
-| Type | Primaire | Secondaire | Accent |
-|------|----------|------------|--------|
-| Feu | `#FF6B35` | `#F7C331` | `#FFFFFF` |
-| Eau | `#4EA8DE` | `#5390D9` | `#FFFFFF` |
-| Plante | `#52B788` | `#95D5B2` | `#2D6A4F` |
-| Électrik | `#FFD60A` | `#FFC300` | `#000000` |
-| Normal | `#A8A878` | `#D8D8C0` | `#705848` |
-| Vol | `#A890F0` | `#C8C0F8` | `#705898` |
-| Poison | `#A040A0` | `#D080D0` | `#483850` |
-| Roche | `#B8A038` | `#D8C870` | `#786830` |
+```bash
+node scripts/setupCreatures.cjs
+```
 
-### UI
+Copie et redimensionne les sprites Retromon → créatures PokeClaude.
 
-| Élément | Couleur |
-|---------|---------|
-| Background | `#1A1A2E` |
-| Panel | `#16213E` |
-| Text | `#FFFFFF` |
-| Accent | `#E94560` |
-| HP Bar (full) | `#52B788` |
-| HP Bar (mid) | `#F7C331` |
-| HP Bar (low) | `#E63946` |
+### Preview tileset (debug)
+
+```bash
+node scripts/previewTileset.cjs
+```
+
+Extrait TOUS les tiles numérotés pour identification visuelle.
+
+## Mapping Créatures
+
+| PokeClaude | Source Retromon | Type |
+|------------|-----------------|------|
+| flamling | Firehound_Front | Feu |
+| flamero | Firehound_Front_02 | Feu |
+| flamaster | Firefox_Front_02 | Feu/Vol |
+| aqualing | Turtle_Front | Eau |
+| aquaro | Turtle_Front_02 | Eau |
+| aquaster | Fish_Front_02 | Eau |
+| leafling | 1_Cactus_Front | Plante |
+| leafero | Cactus_Front_02 | Plante |
+| leafaster | Eel_Front_02 | Plante/Poison |
+| sparkit | Ghost_Front | Électrik |
+| sparkolt | Ghost_Front_02 | Électrik |
 
 ## Player Spritesheet
 
-### Layout
+### Layout (128×128)
 
 ```
 ┌────┬────┬────┬────┐
@@ -107,131 +108,73 @@ const CREATURES = [
 │ U0 │ U1 │ U2 │ U3 │  ← Up (frames 12-15)
 └────┴────┴────┴────┘
 
-Total: 128×128 pixels (4×4 grid of 32×32)
+Chaque frame: 32×32 pixels
 ```
 
-### Animation frames
+### Source
 
-| Frame | Usage |
-|-------|-------|
-| 0 | Idle (stand) |
-| 1 | Walk step left |
-| 2 | Idle (stand) |
-| 3 | Walk step right |
-
-### Phaser config
-
-```typescript
-this.load.spritesheet('player', 'assets/sprites/player/player.png', {
-  frameWidth: 32,
-  frameHeight: 32
-});
-
-// Animation
-this.anims.create({
-  key: 'walk-down',
-  frames: this.anims.generateFrameNumbers('player', { start: 0, end: 3 }),
-  frameRate: 8,
-  repeat: -1
-});
-```
-
-## Creatures Design
-
-### Proportions
-
-```
-┌────────────────────────────────┐
-│         (4px margin)           │
-│   ┌────────────────────────┐   │
-│   │                        │   │
-│   │       CREATURE         │   │
-│   │        24×24           │   │
-│   │      main area         │   │
-│   │                        │   │
-│   └────────────────────────┘   │
-│         (4px margin)           │
-└────────────────────────────────┘
-```
-
-### Guidelines
-
-- **Silhouette** : Reconnaissable même en miniature
-- **Yeux** : Toujours visibles, 2-3px
-- **Couleur dominante** : Reflète le type principal
-- **Pose** : Front view pour combat, légèrement dynamique
-
-### Évolutions
-
-| Stage | Taille | Complexité |
-|-------|--------|------------|
-| Base | 16-20px | Simple, mignon |
-| Mid | 20-24px | Plus détaillé |
-| Final | 24-28px | Complexe, imposant |
+`Top down character template by RgsDev/Character without weapon/idle/`
 
 ## Tiles
+
+### Mapping TilesetGrass
+
+| Tile | Row | Col | Description |
+|------|-----|-----|-------------|
+| grass | 0 | 0 | Herbe simple |
+| tallGrass | 5 | 6 | Forêt dense |
+| path | 1 | 4 | Chemin sable |
+| water | 5 | 1 | Eau profonde |
+| wall | 8 | 6 | Falaise |
 
 ### Types
 
 | Tile | Walkable | Encounter | Visual |
 |------|----------|-----------|--------|
-| grass | Yes | No | Vert uni |
-| tallGrass | Yes | Yes | Vert + texture |
-| path | Yes | No | Beige/marron |
-| water | No | No | Bleu animé |
-| wall | No | No | Gris/pierre |
+| grass | Yes | No | Herbe verte |
+| tallGrass | Yes | Yes | Forêt dense |
+| path | Yes | No | Chemin sable |
+| water | No | No | Eau bleue |
+| wall | No | No | Falaise rocheuse |
 
-### Tile variations
+## Sources (Licences)
 
-```javascript
-// Pour éviter la répétition visuelle
-const GRASS_VARIANTS = [
-  drawGrass1,  // Plain
-  drawGrass2,  // With small flower
-  drawGrass3,  // With rock
-];
-```
+### TilesetGrass (CC-0)
+- **Auteur**: Beast Pixels
+- **Licence**: CC-0 (Public Domain)
+- **URL**: https://beast-pixels.itch.io/overworld-tileset-grass-biome
 
-## UI Elements
+### Retromon Free Pack
+- **Auteur**: Monsteretrope / Willibab
+- **Licence**: Free for personal/commercial, credit required
+- **URL**: https://monsteretrope.itch.io/free-retro-pixel-monsters-sample-pack-1
 
-### Health Bar
+### Top down character template
+- **Auteur**: RgsDev
+- **Licence**: Voir public-license.txt dans le dossier
+- **Usage**: Free to use
 
-```
-┌──────────────────────────────┐
-│ ██████████████░░░░░░░░░░░░░░ │  ← 30×6 pixels
-└──────────────────────────────┘
-  Green      │    Empty
-  (current)  │    (damage)
-```
+## Ajouter une nouvelle créature
 
-### Menu Button
+1. Trouver un sprite dans les packs sources
+2. Ajouter le mapping dans `scripts/setupCreatures.cjs`
+3. Exécuter `node scripts/setupCreatures.cjs`
+4. Ajouter dans `PreloadScene.ts`:
+   ```typescript
+   this.load.image('creature_newname', '/assets/sprites/creatures/newname.png');
+   ```
+5. Créer l'entrée dans `src/data/creatures/species.ts`
 
-```
-┌────────────────────────────────┐
-│  ┌──────────────────────────┐  │  ← 64×24 pixels
-│  │        ATTACK            │  │
-│  └──────────────────────────┘  │
-└────────────────────────────────┘
-   Border    │    Text area
-   (2px)     │    (centered)
-```
+## Ajouter un nouveau tile
 
-## Export
-
-### Depuis éditeur externe
-
-1. **Aseprite** : File → Export → PNG, Scale 1x
-2. **Piskel** : Download → PNG
-3. **Photoshop** : Export → Quick Export as PNG
-
-### Vérification
-
-```bash
-# Check dimensions
-file public/assets/sprites/creatures/*.png
-
-# Should output: PNG image data, 32 x 32, 8-bit/color RGBA
-```
+1. Identifier le tile dans `TilesetGrass/overworld_tileset_grass.png`
+2. Utiliser `node scripts/previewTileset.cjs` pour trouver row/col
+3. Ajouter dans `scripts/extractTiles.cjs`:
+   ```javascript
+   'newtile': { row: X, col: Y },
+   ```
+4. Exécuter `node scripts/extractTiles.cjs`
+5. Copier vers `tiles/` et charger dans `PreloadScene.ts`
 
 ## Tools recommandés
 
@@ -239,15 +182,18 @@ file public/assets/sprites/creatures/*.png
 |-------|-------|---------|
 | Aseprite | Pixel art pro | Non (15$) |
 | Piskel | Web-based | Oui |
-| Pixilart | Web-based | Oui |
-| GIMP | Édition générale | Oui |
+| sharp (npm) | Manipulation images | Oui |
 
-## Checklist nouveau sprite
+## Vérification
 
-- [ ] Dimensions 32×32
-- [ ] Format PNG avec transparence
-- [ ] Palette cohérente avec le type
-- [ ] Silhouette lisible
-- [ ] Nommage lowercase (ex: `flamling.png`)
-- [ ] Ajouté dans `generateSprites.cjs`
-- [ ] Testé in-game
+```bash
+# Check dimensions
+file public/assets/sprites/creatures/*.png
+# → PNG image data, 64 x 64
+
+file public/assets/sprites/tiles/*.png
+# → PNG image data, 32 x 32
+
+file public/assets/sprites/player/player.png
+# → PNG image data, 128 x 128
+```

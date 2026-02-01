@@ -70,11 +70,22 @@ export class PreloadScene extends Phaser.Scene {
       frameHeight: 32,
     });
 
-    // Creatures
+    // Creatures - Base forms
     this.load.image('creature_flamling', '/assets/sprites/creatures/flamling.png');
     this.load.image('creature_aqualing', '/assets/sprites/creatures/aqualing.png');
     this.load.image('creature_leafling', '/assets/sprites/creatures/leafling.png');
     this.load.image('creature_sparkit', '/assets/sprites/creatures/sparkit.png');
+
+    // Creatures - Mid evolutions
+    this.load.image('creature_flamero', '/assets/sprites/creatures/flamero.png');
+    this.load.image('creature_aquaro', '/assets/sprites/creatures/aquaro.png');
+    this.load.image('creature_leafero', '/assets/sprites/creatures/leafero.png');
+    this.load.image('creature_sparkolt', '/assets/sprites/creatures/sparkolt.png');
+
+    // Creatures - Final evolutions
+    this.load.image('creature_flamaster', '/assets/sprites/creatures/flamaster.png');
+    this.load.image('creature_aquaster', '/assets/sprites/creatures/aquaster.png');
+    this.load.image('creature_leafaster', '/assets/sprites/creatures/leafaster.png');
 
     // UI
     this.load.image('pokeball', '/assets/sprites/ui/pokeball.png');
