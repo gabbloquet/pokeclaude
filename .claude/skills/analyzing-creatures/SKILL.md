@@ -1,32 +1,33 @@
 ---
 name: analyzing-creatures
-description: Analyzes creature stats, type matchups, and effectiveness. Use when comparing creatures, discussing type advantages, or evaluating team composition.
+description: Analyzes creature matchups and type effectiveness. Use when user asks about type advantages, creature comparison, or team composition.
 ---
 
-# Creature Analysis
+# Analyze Creatures
 
-## Type Effectiveness Chart
-
-| Attacking → | Fire | Water | Grass | Electric |
-|-------------|------|-------|-------|----------|
+## Type Effectiveness
+| Attack → | Fire | Water | Grass | Electric |
+|----------|------|-------|-------|----------|
 | Fire | 0.5x | 0.5x | 2x | 1x |
 | Water | 2x | 0.5x | 0.5x | 1x |
 | Grass | 0.5x | 2x | 0.5x | 1x |
 | Electric | 1x | 2x | 0.5x | 0.5x |
 
 ## Damage Formula
-
 ```
-damage = ((2 * level / 5 + 2) * power * (atk / def) / 50 + 2) * modifiers
+damage = ((2*level/5+2) * power * atk/def / 50 + 2) * modifiers
 ```
 
-### Modifiers
-- **STAB**: 1.5x if move type matches creature type
-- **Type effectiveness**: 0.5x, 1x, or 2x
+## Modifiers
+- **STAB**: 1.5x if move type = creature type
+- **Type**: 0.5x, 1x, or 2x
 - **Random**: 0.85-1.0
 
 ## Analysis Tasks
+1. Compare two creatures → Read stats, calculate matchups
+2. Team analysis → Check type coverage
+3. Counter suggestions → Find effective types
 
-1. **Compare two creatures**: Read stats, calculate matchups
-2. **Team analysis**: Check type coverage
-3. **Counter suggestions**: Find effective types against target
+## Example
+Input: "Compare Flamling vs Aqualing"
+Output: Stats comparison + type matchup analysis (Water beats Fire)

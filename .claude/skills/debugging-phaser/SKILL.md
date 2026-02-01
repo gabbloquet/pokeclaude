@@ -1,31 +1,24 @@
 ---
 name: debugging-phaser
-description: Debugs Phaser 3 game issues including rendering, scenes, input, and animations. Use when encountering game bugs, display problems, or Phaser-specific errors.
+description: Debugs Phaser 3 game issues. Use when user reports rendering problems, scene issues, input bugs, or Phaser-specific errors.
 ---
 
-# Phaser 3 Debugging
+# Debug Phaser
 
-## Common Issues
-
-### Scene Lifecycle
+## Scene Lifecycle
 ```
 Boot → Preload → Create → Update (loop)
 ```
 
-Check:
-- Assets loaded in `preload()`?
-- Objects created in `create()`?
-- `this.scene.start()` called correctly?
+## Common Issues
 
 ### Sprite Not Showing
-
-1. Asset loaded? Check `this.load.image()` in preload
-2. Correct key? Match load key with create key
-3. Position visible? Check x, y within camera bounds
-4. Depth/z-index? Use `setDepth()`
+1. Asset loaded in `preload()`?
+2. Key matches between load and create?
+3. Position within camera bounds?
+4. Check `setDepth()` for z-index
 
 ### Input Not Working
-
 ```typescript
 // Keyboard
 this.input.keyboard.on('keydown-SPACE', callback);
@@ -36,17 +29,12 @@ sprite.on('pointerdown', callback);
 ```
 
 ### Animation Issues
-
 ```typescript
-// Check animation exists
 console.log(this.anims.exists('walk'));
-
-// Debug current frame
 console.log(sprite.anims.currentFrame);
 ```
 
 ## Debug Tools
-
 ```typescript
 // Show physics bodies
 this.physics.world.createDebugGraphic();
@@ -55,8 +43,11 @@ this.physics.world.createDebugGraphic();
 this.game.config.fps.forceSetTimeOut = true;
 ```
 
-## Project-Specific Files
-
+## Project Files
 - Scenes: `src/scenes/`
 - Config: `src/config/`
 - Entities: `src/entities/`
+
+## Example
+Input: "Le joueur ne s'affiche pas"
+Output: Check preload key, create call, position, and depth

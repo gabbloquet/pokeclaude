@@ -16,50 +16,137 @@ Ce document liste les fonctionnalités avancées de Claude Code à explorer en u
 
 ---
 
-## Niveau 2 - Skills (remplace les Commands)
+## Niveau 2 - Skills Atomiques (Best Practices)
 
 > **Note**: Depuis la version 2.1.3, les slash commands ont été fusionnés avec les Skills.
 > Tout va maintenant dans `.claude/skills/`
 
-Créer des skills dans `.claude/skills/<skill-name>/SKILL.md` :
+### Principe Single-Responsibility
 
-### Skills implémentées (prêtes à l'emploi)
-- [x] `/new-creature` - Créer une nouvelle créature complète
-- [x] `/balance-check` - Analyser l'équilibrage des stats
-- [x] `/add-move` - Ajouter une nouvelle attaque
-- [x] `/analyzing-creatures` - Analyse des matchups et stats
-- [x] `/debugging-phaser` - Debug des problèmes Phaser 3
+**1 Skill = 1 Action**
 
-### Skills à implémenter
-- [ ] `/generate-sprites` - Wrapper pour le script de génération
-- [ ] `/run-tests` - Lancer les tests avec rapport détaillé
+Les skills doivent être atomiques : une seule responsabilité, une seule action.
 
-### Structure d'une Skill
+| Avant (Multi-étapes) | Problème |
+|---------------------|----------|
+| `/new-creature` (5 étapes) | Mélange données + sprite + tests + docs |
+| `/add-move` (4 étapes) | Mélange données + effet + assignation + test |
+
+| Après (Atomique) | Avantage |
+|-----------------|----------|
+| `/adding-creature-data` | Une créature dans species.ts |
+| `/adding-move-data` | Une attaque dans moves.ts |
+| `/generating-sprite` | Un sprite via script |
+| `/writing-test` | Un fichier de test |
+
+### Pattern "verbe-ing + objet"
+
+```
+✅ Bon                     ❌ Éviter
+adding-creature-data       new-creature
+writing-test               test-creator
+fixing-bug                 bug-fixer
+committing-changes         commit
+```
+
+### Skills PokeClaude (restructurées)
+
+#### Catégorie : Données (`data/`)
+- [x] `/adding-creature-data` - Ajouter UNE créature
+- [x] `/adding-move-data` - Ajouter UNE attaque
+- [x] `/adding-item-data` - Ajouter UN item
+
+#### Catégorie : Tests (`tests/`)
+- [x] `/writing-test` - Écrire UN test unitaire
+- [x] `/running-tests` - Lancer les tests
+
+#### Catégorie : Assets (`assets/`)
+- [x] `/generating-sprite` - Générer UN sprite
+
+#### Catégorie : Documentation (`docs/`)
+- [x] `/updating-docs` - Mettre à jour CLAUDE.md/README
+
+#### Catégorie : Code (`code/`)
+- [x] `/adding-feature` - Ajouter UNE feature
+- [x] `/fixing-bug` - Corriger UN bug
+- [x] `/refactoring-code` - Refactorer UN composant
+
+#### Catégorie : Git (`git/`)
+- [x] `/committing-changes` - Créer un commit
+- [x] `/creating-pr` - Créer une PR
+
+#### Catégorie : Analyse (`analysis/`)
+- [x] `/checking-balance` - Analyser l'équilibrage
+- [x] `/analyzing-creatures` - Analyser les matchups
+
+#### Catégorie : Debug (`debug/`)
+- [x] `/debugging-phaser` - Debug Phaser 3
+
+### Structure d'une Skill Atomique
 
 ```
 .claude/skills/
-└── new-creature/
-    └── SKILL.md          # Fichier principal avec frontmatter YAML
+├── adding-creature-data/
+│   └── SKILL.md
+├── adding-move-data/
+│   └── SKILL.md
+├── writing-test/
+│   └── SKILL.md
+└── ...
 ```
 
-### Format SKILL.md
+### Format SKILL.md (Atomique)
+
+```yaml
+---
+name: verbe-ing-objet
+description: [Verbe] [UN/UNE] [objet]. Use when [trigger précis].
+---
+
+# [Action]
+
+## Input
+[Ce dont Claude a besoin]
+
+## Output
+[Ce que Claude doit produire]
+
+## Fichier(s)
+[Chemin exact]
+
+## Exemple
+[Input → Output concret]
+```
+
+### Exemple Concret
 
 ```markdown
 ---
-name: creating-new-creature
-description: Creates a new creature with stats, sprites, moves. Use when adding creatures.
+name: adding-creature-data
+description: Adds ONE creature to src/data/species.ts. Use when user asks to add a new creature.
 ---
 
-# Create New Creature
+# Add Creature Data
 
-## Workflow
-[Instructions ici...]
+## Input
+- Name, types, base stats, optional evolution
+
+## Output
+- One entry in CREATURES object
+
+## File
+`src/data/species.ts`
+
+## Example
+Input: "Ajoute Rocklet, type Roche"
+Output: Entry with id, name, types, baseStats
 ```
 
 ### Règles importantes
 - **name**: lowercase, hyphens, max 64 chars, pas de "claude" ou "anthropic"
 - **description**: 3ème personne, inclure QUOI + QUAND utiliser
-- **Corps**: < 500 lignes, progressive disclosure pour le reste
+- **Corps**: < 50 lignes pour skills atomiques (< 500 pour skills complexes)
+- **Atomicité**: 1 skill = 1 action, pas de workflows multi-étapes
 
 ---
 
