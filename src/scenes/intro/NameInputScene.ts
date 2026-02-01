@@ -54,10 +54,10 @@ export class NameInputScene extends Phaser.Scene {
     });
     this.textBox.showText('Quel est ton nom ?');
 
-    // Clavier
+    // Zone de saisie du nom (centrée)
     this.keyboard = new KeyboardInput(this, {
-      x: INTRO_UI.keyboard.x,
-      y: INTRO_UI.keyboard.y + 30,
+      x: (GAME_WIDTH - 280) / 2,
+      y: 260,
       maxLength: INTRO_UI.nameInput.maxLength,
       minLength: INTRO_UI.nameInput.minLength,
       onConfirm: (name) => this.showConfirmation(name),
